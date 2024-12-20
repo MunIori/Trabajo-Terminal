@@ -89,3 +89,7 @@ El desarrollo incluye:
 - H_a: "Media de exactitud a nivel de letras" de credenciales horizontales ≠ "Media de exactitud a nivel de letras" de credenciales verticales
 
 ## Capturas de Pantalla
+<img src="assets/interfaz-iniciar-verificacion-vertical.jpg" alt="Interfaz iniciar verificación" width="300">
+<img src="assets/interfaz-fotografiar-credencial-vertical.jpg" alt="Interfaz fotografiar credencial" width="300">
+<img src="assets/interfaz-escanear-codigo-qr-vertical.jpg" alt="Interfaz escanear QR" width="300">
+<img src="assets/ejemplo-resultados-vertical.jpg" alt="Interfaz resultados" width="300">
