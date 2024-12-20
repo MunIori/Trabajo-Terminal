@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es-mx">
+    <head>
+        <meta charset="utf-8"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#charset-->
+        <meta name="viewport" content="width=device-width, height=device-height, interactive-widget=overlays-content"/> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag-->
+        <title>Herramienta</title>
+        <style>
+            body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                margin: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/margin*/
+                border-width: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-width*/
+                padding: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/padding*/
+                font-family: sans-serif; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-family*/
+                text-align: center; /*https://developer.mozilla.org/en-US/docs/Web/CSS/text-align*/
+            }
+            body, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                display: flex; /*https://developer.mozilla.org/en-US/docs/Web/CSS/display#flex*/
+                flex-wrap: nowrap; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap#nowrap*/
+                align-items: center; /*https://developer.mozilla.org/en-US/docs/Web/CSS/align-items#center*/
+            }
+            body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                height: 100svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                width: 100vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                justify-content: space-between; /*https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content#space-between*/
+            }
+            .botones {
+                flex-direction: column; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction#column*/
+                justify-content: space-evenly; /*https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content#space-evenly*/
+            }
+            .barra, .boton {
+                background-color: #004aad; /*https://developer.mozilla.org/en-US/docs/Web/CSS/background-color*/
+            }
+            .boton {
+                color: #ffffff; /*https://developer.mozilla.org/en-US/docs/Web/CSS/color*/
+                padding: 1em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/padding*/
+                border-radius: 2em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius*/
+            }
+            .contenido#camara {
+                position: relative; /*https://developer.mozilla.org/en-US/docs/Web/CSS/position#relative*/
+            }
+            #vista-camara, #foto-camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                height: 100%; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                width: 100%; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                object-fit: contain; /*https://developer.mozilla.org/es/docs/Web/CSS/object-fit#contain*/
+                position: absolute; /*https://developer.mozilla.org/en-US/docs/Web/CSS/position#absolute*/
+                left: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/left*/
+                top: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/top*/
+            }
+            #foto-camara {
+                z-index: 1; /*https://developer.mozilla.org/en-US/docs/Web/CSS/z-index*/
+            }
+            .contenido#tabla {
+                overflow: auto; /*https://developer.mozilla.org/en-US/docs/Web/CSS/overflow#auto*/
+            }
+            #resultados {
+                border-collapse: separate; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-collapse#separate*/
+                border-spacing: 2em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-spacing*/
+            }
+            @media screen and (orientation: portrait) { /*https://developer.mozilla.org/en-US/docs/Web/CSS/@media/orientation*/
+                body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                    font-size: 2vh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-size*/
+                }
+                body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                    flex-direction: column; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction#column*/
+                }
+                .barra, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                    width: 100vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .barra {
+                    height: 15svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .contenido#camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                    height: 60svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                    width: 95vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .botones#credencial, .botones#codigo-qr {
+                    height: 20svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .contenido#tabla {
+                    height: 50svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                    width: 95vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .botones#opciones {
+                    height: 30svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .botones#inicio {
+                    height: 80svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+            }
+            @media screen and (orientation: landscape) { /*https://developer.mozilla.org/en-US/docs/Web/CSS/@media/orientation*/
+                body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                    font-size: 4vh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-size*/
+                }
+                body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                    flex-direction: row; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction#row*/
+                }
+                .barra, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                    height: 100svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .barra {
+                    width: 15vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .contenido#camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                    height: 95svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                    width: 60vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .botones#credencial, .botones#codigo-qr {
+                    width: 20vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .contenido#tabla {
+                    height: 95svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                    width: 50vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .botones#opciones {
+                    width: 30vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .botones#inicio {
+                    width: 80vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+            }
+        </style>
+        <script> //https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
+            "use strict"; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
+
+            let fotoCredencial1 = null;
+            
+            function oculta_elemento(id) {
+                let elemento = document.getElementById(id); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let valorAnt = elemento.style.display; //https://developer.mozilla.org/en-US/docs/Web/CSS/display
+                elemento.style.display = "none"; //https://developer.mozilla.org/en-US/docs/Web/CSS/display#none
+                let valorAct = elemento.style.display; //https://developer.mozilla.org/en-US/docs/Web/CSS/display
+                console.log(`[${id}] "${valorAnt}" -> "${valorAct}"`);
+            }
+
+            function muestra_elemento(id) {
+                let elemento = document.getElementById(id); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let valorAnt = elemento.style.display; //https://developer.mozilla.org/en-US/docs/Web/CSS/display
+                elemento.style.display = ""; //https://developer.mozilla.org/en-US/docs/Web/CSS/display
+                let valorAct = elemento.style.display; //https://developer.mozilla.org/en-US/docs/Web/CSS/display
+                console.log(`[${id}] "${valorAnt}" -> "${valorAct}"`);
+            }
+
+            function dibujaCuadro() {
+                let camara = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let alto = camara.videoHeight; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/videoHeight
+                let ancho = camara.videoWidth; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/videoWidth
+
+                alto = 500;
+                ancho = 500;
+
+                let canvas = document.getElementById("foto-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let dibujador2d = canvas.getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+                canvas.height = alto; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/height
+                canvas.width = ancho; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/width
+                
+                dibujador2d.clearRect(0, 0, ancho, alto); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clearRect
+                dibujador2d.lineWidth = 2; //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth
+                dibujador2d.strokeStyle = "blue"; //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeStyle
+                const BORDE = 20;
+                dibujador2d.strokeRect(BORDE, BORDE, ancho - 2 * BORDE, alto - 2 * BORDE); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeRect
+            }
+
+            function fotografia_credencial() {
+                let canvas = document.getElementById("foto-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                //let canvas = document.createElement("canvas"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
+                let ctx = canvas.getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+
+                let camara = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let alto = camara.videoHeight; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/videoHeight
+                let ancho = camara.videoWidth; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/videoWidth
+
+                alto = 500;
+                ancho = 500;
+
+                canvas.height = alto; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/height
+                canvas.width = ancho; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/width
+                ctx.drawImage(camara, 0, 0); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+
+                let aleatorio1 = Math.random() * 100 + 10; //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+                let aleatorio2 = Math.random() * 100 + 10;
+                ctx.strokeRect(10, 10, aleatorio1, aleatorio2); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeRect
+
+                fotoCredencial1 = canvas.toDataURL("image/png"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
+                console.log(fotoCredencial1); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+            }
+
+            function escanear_qr() {
+                let canvas = document.getElementById("foto-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                //let canvas = document.createElement("canvas"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
+                let ctx = canvas.getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+
+                let camara = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let alto = camara.videoHeight; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/videoHeight
+                let ancho = camara.videoWidth; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/videoWidth
+
+                alto = 500;
+                ancho = 500;
+
+                canvas.height = alto; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/height
+                canvas.width = ancho; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/width
+                ctx.drawImage(camara, 0, 0); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+
+                let aleatorio1 = Math.random() * 100 + 10; //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+                let aleatorio2 = Math.random() * 100 + 10;
+                ctx.strokeRect(10, 10, aleatorio1, aleatorio2); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeRect
+
+                let fotoCredencial2 = canvas.toDataURL("image/png"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
+                console.log(fotoCredencial2); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                let datos = new FormData(); //https://developer.mozilla.org/en-US/docs/Web/API/FormData
+                datos.set("frente", fotoCredencial1); //https://developer.mozilla.org/en-US/docs/Web/API/FormData/set
+                datos.set("reverso", fotoCredencial2); //https://developer.mozilla.org/en-US/docs/Web/API/FormData/set
+
+                let contenido = {
+                    method: "post", 
+                    body: datos
+                };
+                //fetch("/fotografia", contenido).then(recibeResultados); //https://developer.mozilla.org/en-US/docs/Web/API/fetch
+
+                fotoCredencial1 = null; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Delete_in_strict_mode#freeing_the_contents_of_a_variable
+                fotoCredencial2 = null; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Delete_in_strict_mode#freeing_the_contents_of_a_variable
+                datos = null;
+                console.log(fotoCredencial1);
+                console.log(fotoCredencial2);
+                console.log(datos);
+            }
+
+            function inicializa_herramienta() {
+                let botonFotografiar = document.getElementById("fotografiar-credencial"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFotografiar.addEventListener("click", fotografia_credencial, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                botonFotografiar.addEventListener("click", muestra_interfaz_escaner, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                let botonEscanear = document.getElementById("escanear-qr"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFotografiar.addEventListener("click", escanear_qr, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                botonEscanear.addEventListener("click", muestra_interfaz_fotografia_2, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                let botonVer = document.getElementById("ver-resultados"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonVer.addEventListener("click", muestra_interfaz_resultados, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                let botonContinuar = document.getElementById("continuar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonContinuar.addEventListener("click", muestra_interfaz_fotografia_3, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                let botonFinalizar = document.getElementById("finalizar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFinalizar.addEventListener("click", muestra_interfaz_inicio, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                dibujaCuadro();
+                screen.orientation.addEventListener("change", dibujaCuadro, false); //https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/change_event
+            }
+
+            function muestra_camara(video) {
+                let camara = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                camara.srcObject = video; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
+                return camara.play(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
+            }
+
+            function inicializa_camara() {
+                let opcionesCamara = {
+                    video: { 
+                        facingMode: "environment", //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/facingMode#environment
+                        height: 480, //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/height
+                        width: 640 //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/width
+                    }
+                }
+                let procesoCamara = navigator.mediaDevices.getUserMedia(opcionesCamara); //https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+                procesoCamara.then(muestra_camara);
+                procesoCamara.then(inicializa_herramienta);
+            }
+
+            function muestra_interfaz_fotografia_1() {
+                oculta_elemento("inicio");
+                muestra_elemento("camara");
+                muestra_elemento("credencial");
+                
+                inicializa_herramienta();
+            }
+
+            function muestra_interfaz_escaner() {
+                oculta_elemento("credencial");
+                muestra_elemento("codigo-qr");
+            }
+
+            function muestra_interfaz_fotografia_2() {
+                oculta_elemento("codigo-qr");
+                muestra_elemento("credencial");
+            }
+
+            function muestra_interfaz_resultados() {
+                oculta_elemento("camara");
+                oculta_elemento("credencial");
+                muestra_elemento("tabla");
+                muestra_elemento("opciones");
+            }
+
+            function muestra_interfaz_fotografia_3() {
+                oculta_elemento("tabla");
+                oculta_elemento("opciones");
+                muestra_elemento("camara");
+                muestra_elemento("credencial");
+            }
+
+            function muestra_interfaz_inicio() {
+                oculta_elemento("tabla");
+                oculta_elemento("opciones");
+                muestra_elemento("inicio");
+            }
+
+            function main() {
+                oculta_elemento("camara");
+                oculta_elemento("credencial");
+                oculta_elemento("codigo-qr");
+                oculta_elemento("tabla");
+                oculta_elemento("opciones");
+                let botonIniciar = document.getElementById("iniciar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                //botonIniciar.addEventListener("click", inicializa_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                botonIniciar.addEventListener("click", muestra_interfaz_fotografia_1, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+            }
+
+            window.addEventListener("load", main, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+        </script>
+    </head>
+    <body>
+        <div class="barra"></div> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div-->
+        <div class="botones" id="inicio">
+            <button type="button" class="boton" id="iniciar-verificacion">Iniciar Verificación</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+        </div>
+        <div class="contenido" id="camara">
+            <video id="vista-camara"></video> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video-->
+            <canvas id="foto-camara"></canvas> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas-->
+        </div>
+        <div class="botones" id="credencial">
+            <button type="button" class="boton" id="fotografiar-credencial">Fotografiar credencial</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+            <button type="button" class="boton" id="ver-resultados">Ver resultados</button>
+        </div>
+        <div class="botones" id="codigo-qr">
+            <button type="button" class="boton" id="escanear-qr">Escanear código QR</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+        </div>
+        <div class="contenido" id="tabla">
+            <table id="resultados"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table-->
+                <thead> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/thead-->
+                    <tr> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr-->
+                        <th>No.</th> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th-->
+                        <th>Boleta</th>
+                        <th>Nombre</th>
+                        <th>Resultado</th>
+                    </tr>   
+                </thead>
+                <tbody id="valores"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody-->
+                    <tr> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr-->
+                        <td>1</td> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td-->
+                        <td>2020162489</td>
+                        <td>Perla Rebeca</td>
+                        <td>0.85452541</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>2020135469</td>
+                        <td>Maribel</td>
+                        <td>0.65478445</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>2020134694</td>
+                        <td>Enrique</td>
+                        <td>0.9524524</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>2020108538</td>
+                        <td>Gustavo</td>
+                        <td>0.7542165</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>2020168745</td>
+                        <td>César</td>
+                        <td>0.585263</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>2020123456</td>
+                        <td>Abril</td>
+                        <td>0.85452541</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>2021123456</td>
+                        <td>Berenice</td>
+                        <td>0.65478445</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>2022123456</td>
+                        <td>Cristal</td>
+                        <td>0.9524524</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>2023123456</td>
+                        <td>Darwin</td>
+                        <td>0.7542165</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>2024123456</td>
+                        <td>Eduardo</td>
+                        <td>0.585263</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>2020123456</td>
+                        <td>Genaro</td>
+                        <td>0.85452541</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>2021123456</td>
+                        <td>Mónica</td>
+                        <td>0.65478445</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>2022123456</td>
+                        <td>Idalia</td>
+                        <td>0.9524524</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>2023123456</td>
+                        <td>Iván</td>
+                        <td>0.7542165</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>2024123456</td>
+                        <td>Erwin Munguia Poblano</td>
+                        <td>0.585263</td>
+                    </tr>
+                    <tr>
+                        <td>16</td>
+                        <td>2024123456</td>
+                        <td>Rodrigo Olarte Astudillo</td>
+                        <td>0.585263</td>
+                    </tr>
+                    <tr>
+                        <td>17</td>
+                        <td>2024123456</td>
+                        <td>Luis Gerardo Ortiz Cruz</td>
+                        <td>0.585263</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="botones" id="opciones">
+            <button type="button" class="boton" id="continuar-verificacion">Continuar verificación</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+            <button type="button" class="boton" id="guardar-resultados">Guardar resultados</button>
+            <button type="button" class="boton" id="finalizar-verificacion">Finalizar verificación</button>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es-mx">
+    <head>
+        <meta charset="utf-8"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#charset-->
+        <meta name="viewport" content="width=device-width, height=device-height, interactive-widget=overlays-content"/> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag-->
+        <title>Herramienta</title>
+        <style> /*https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style*/
+            body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                margin: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/margin*/
+                border-width: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-width*/
+                padding: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/padding*/
+                font-family: sans-serif; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-family*/
+                text-align: center; /*https://developer.mozilla.org/en-US/docs/Web/CSS/text-align*/
+            }
+            body, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                display: flex; /*https://developer.mozilla.org/en-US/docs/Web/CSS/display*/
+                flex-wrap: nowrap; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap*/
+                align-items: center; /*https://developer.mozilla.org/es/docs/Web/CSS/align-items*/
+            }
+            body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                height: 100svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                width: 100vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                overflow: hidden; /*https://developer.mozilla.org/en-US/docs/Web/CSS/overflow*/
+                justify-content: space-between; /*https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content*/
+            }
+            .botones {
+                flex-direction: column; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction*/
+                justify-content: space-evenly;
+            }
+            .barra, .boton {
+                background-color: #004aad; /*https://developer.mozilla.org/en-US/docs/Web/CSS/background-color*/
+            }
+            .boton {
+                color: #ffffff; /*https://developer.mozilla.org/en-US/docs/Web/CSS/color*/
+                padding: 1em;
+                border-radius: 2em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius*/
+            }
+            .contenido#camara {
+                overflow: hidden;
+                position: relative; /*https://developer.mozilla.org/en-US/docs/Web/CSS/position#relative*/
+            }
+            #vista-camara, #foto-camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                height: 100%;
+                width: 100%;
+                object-fit: contain; /*https://developer.mozilla.org/es/docs/Web/CSS/object-fit#contain*/
+            }
+            #foto-camara {
+                position: absolute; /*https://developer.mozilla.org/en-US/docs/Web/CSS/position#absolute*/
+                left: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/left*/
+                z-index: 1; /*https://developer.mozilla.org/en-US/docs/Web/CSS/z-index*/
+            }
+            .contenido#tabla {
+                overflow-y: scroll;
+            }
+            #resultados {
+                border-collapse: separate; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-collapse*/
+                border-spacing: 2em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-spacing*/
+            }
+            @media screen and (orientation: portrait) { /*https://developer.mozilla.org/en-US/docs/Web/CSS/@media/orientation*/
+                body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                    font-size: 2vh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-size*/
+                }
+                body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                    flex-direction: column; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction*/
+                }
+                .barra, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                    width: 100vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .barra {
+                    height: 15svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .contenido#camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                    height: 60svh;
+                    width: 95vw;
+                }
+                .botones#credencial, .botones#codigo-qr {
+                    height: 20svh;
+                }
+                .contenido#tabla {
+                    height: 50svh;
+                    width: 95vw;
+                }
+                .botones#opciones {
+                    height: 30svh;
+                }
+            }
+            @media screen and (orientation: landscape) { /*https://developer.mozilla.org/en-US/docs/Web/CSS/@media/orientation*/
+                body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                    font-size: 4vh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-size*/
+                }
+                body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                    flex-direction: row; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction*/
+                }
+                .barra, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                    height: 100svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .barra {
+                    width: 15vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .contenido#camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                    height: 95svh;
+                    width: 60vw;
+                }
+                .botones#credencial, .botones#codigo-qr {
+                    width: 20vw;
+                }
+                .contenido#tabla {
+                    height: 95svh;
+                    width: 50vw;
+                }
+                .botones#opciones {
+                    width: 30vw;
+                }
+            }
+        </style>
+        <script> //https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
+            "use strict"; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
+
+            function guardaResultados() {
+                let resultados = [
+                    ["No.", "Boleta", "Nombre", "Resultado"],
+                    [1, "2020162489", "Perla Rebeca", 0.85452541],
+                    [2, "2020135469", "Maribel", 0.65478445],
+                    [3, "2020134694", "Enrique", 0.9524524],
+                    [4, "2020108538", "Gustavo", 0.7542165],
+                    [5, "2020168745", "César", 0.585263],
+                    [6, "2020123456", "Abril", 0.85452541],
+                    [7, "2021123456", "Berenice", 0.65478445],
+                    [8, "2021123456", "Cristal", 0.9524524],
+                    [9, "2021123456", "Darwin", 0.7542165],
+                    [10, "2021123456", "Eduardo", 0.585263],
+                    [11, "2021123456", "Genaro", 0.85452541],
+                    [12, "2021123456", "Mónica", 0.65478445],
+                    [13, "2021123456", "Idalia", 0.9524524],
+                    [14, "2021123456", "Iván", 0.7542165],
+                    [15, "2021123456", "Erwin Munguia Poblano", 0.585263],
+                    [16, "2021123456", "Rodrigo Olarte Astudillo", 0.585263],
+                    [17, "2021123456", "Luis Gerardo Ortiz Cruz", 0.585263]
+                ];
+
+                let nResultados = resultados.length; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length
+                let csv = new Array(nResultados); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Array
+                for (let i = 0; i < nResultados; i++) {
+                    let fila = resultados[i];
+                    fila = fila.join(); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
+                    csv[i] = fila;
+                }
+                csv = csv.join("\n"); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
+
+                console.log(csv);
+
+                let tipoArchivo = { 
+                    type: "text/csv" 
+                };
+                let archivo = new Blob([csv], tipoArchivo); //https://developer.mozilla.org/en-US/docs/Web/API/Blob/Blob
+                let enlaceArchivo = URL.createObjectURL(archivo); //https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static
+
+                let fecha = new Date(); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+                fecha = [
+                    fecha.getFullYear(), //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getFullYear
+                    fecha.getMonth() + 1, //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getMonth
+                    fecha.getDate(), //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getDate
+                    fecha.getHours(), //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getHours
+                    fecha.getMinutes(), //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getMinutes
+                    fecha.getSeconds() //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getSeconds
+                ]
+                fecha = fecha.join("-"); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
+                let nombreArchivo = `resultados-${fecha}.csv`; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+
+                let enlaceDescarga = document.createElement("a"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
+                enlaceDescarga.href = enlaceArchivo; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLAnchorElement/href
+                enlaceDescarga.target = "_blank"; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLAnchorElement/target
+                enlaceDescarga.download = nombreArchivo; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLAnchorElement/download
+                enlaceDescarga.click(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click
+
+                URL.revokeObjectURL(archivo); //https://developer.mozilla.org/en-US/docs/Web/API/URL/revokeObjectURL_static
+            }
+
+            function eliminaResultados() {
+                let valores = document.getElementById("valores"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                valores.replaceChildren(); //https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceChildren
+            }
+
+            function agregaResultados() {
+                let resultados = [
+                    ["No.", "Boleta", "Nombre", "Resultado"],
+                    [1, "2020162489", "Perla Rebeca", 0.85452541],
+                    [2, "2020135469", "Maribel", 0.65478445],
+                    [3, "2020134694", "Enrique", 0.9524524],
+                    [4, "2020108538", "Gustavo", 0.7542165],
+                    [5, "2020168745", "César", 0.585263],
+                    [6, "2020123456", "Abril", 0.85452541],
+                    [7, "2021123456", "Berenice", 0.65478445],
+                    [8, "2021123456", "Cristal", 0.9524524],
+                    [9, "2021123456", "Darwin", 0.7542165],
+                    [10, "2021123456", "Eduardo", 0.585263],
+                    [11, "2021123456", "Genaro", 0.85452541],
+                    [12, "2021123456", "Mónica", 0.65478445],
+                    [13, "2021123456", "Idalia", 0.9524524],
+                    [14, "2021123456", "Iván", 0.7542165],
+                    [15, "2021123456", "Erwin Munguia Poblano", 0.585263],
+                    [16, "2021123456", "Rodrigo Olarte Astudillo", 0.585263],
+                    [17, "2021123456", "Luis Gerardo Ortiz Cruz", 0.585263]
+                ];
+                let valores = document.getElementById("valores"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+
+                for (let i = 1; i < resultados.length; i++) {
+                    let fila = valores.insertRow(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableSectionElement#instance_methods
+                    let valoresFila = resultados[i];
+                    
+                    for (let j = 0; j < valoresFila.length; j++) {
+                        let celda = fila.insertCell(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableRowElement/insertCell
+                        
+                        celda.append(valoresFila[j]); //https://developer.mozilla.org/en-US/docs/Web/API/Element/append
+                    }
+                }
+            }
+
+            function main() {
+                let botonGuardar = document.getElementById("guardar-resultados"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonGuardar.addEventListener("click", guardaResultados, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+
+                let botonFinalizar = document.getElementById("finalizar-verificacion");
+                botonFinalizar.addEventListener("click", eliminaResultados, false);
+
+                let botonContinuar = document.getElementById("continuar-verificacion");
+                botonContinuar.addEventListener("click", agregaResultados, false);
+            }
+
+            window.addEventListener("load", main, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+        </script>
+    </head>
+    <body>
+        <div class="barra"></div> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div-->
+        <div class="contenido" id="tabla">
+            <table id="resultados"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table-->
+                <thead> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/thead-->
+                    <tr> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr-->
+                        <th>No.</th> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th-->
+                        <th>Boleta</th>
+                        <th>Nombre</th>
+                        <th>Resultado</th>
+                    </tr>   
+                </thead>
+                <tbody id="valores"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody-->
+                    <tr> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr-->
+                        <td>1</td> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/td-->
+                        <td>2020162489</td>
+                        <td>Perla Rebeca</td>
+                        <td>0.85452541</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>2020135469</td>
+                        <td>Maribel</td>
+                        <td>0.65478445</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>2020134694</td>
+                        <td>Enrique</td>
+                        <td>0.9524524</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>2020108538</td>
+                        <td>Gustavo</td>
+                        <td>0.7542165</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>2020168745</td>
+                        <td>César</td>
+                        <td>0.585263</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>2020123456</td>
+                        <td>Abril</td>
+                        <td>0.85452541</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>2021123456</td>
+                        <td>Berenice</td>
+                        <td>0.65478445</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>2022123456</td>
+                        <td>Cristal</td>
+                        <td>0.9524524</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>2023123456</td>
+                        <td>Darwin</td>
+                        <td>0.7542165</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>2024123456</td>
+                        <td>Eduardo</td>
+                        <td>0.585263</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>2020123456</td>
+                        <td>Genaro</td>
+                        <td>0.85452541</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>2021123456</td>
+                        <td>Mónica</td>
+                        <td>0.65478445</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>2022123456</td>
+                        <td>Idalia</td>
+                        <td>0.9524524</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>2023123456</td>
+                        <td>Iván</td>
+                        <td>0.7542165</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>2024123456</td>
+                        <td>Erwin Munguia Poblano</td>
+                        <td>0.585263</td>
+                    </tr>
+                    <tr>
+                        <td>16</td>
+                        <td>2024123456</td>
+                        <td>Rodrigo Olarte Astudillo</td>
+                        <td>0.585263</td>
+                    </tr>
+                    <tr>
+                        <td>17</td>
+                        <td>2024123456</td>
+                        <td>Luis Gerardo Ortiz Cruz</td>
+                        <td>0.585263</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="botones" id="opciones">
+            <button type="button" class="boton" id="continuar-verificacion">Continuar verificación</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+            <button type="button" class="boton" id="guardar-resultados">Guardar resultados</button>
+            <button type="button" class="boton" id="finalizar-verificacion">Finalizar verificación</button>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es-mx">
+    <head>
+        <meta charset="utf-8"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#charset-->
+        <meta name="viewport" content="width=device-width, height=device-height, interactive-widget=overlays-content"/> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag-->
+        <title>Herramienta</title>
+        <style> /*https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style*/
+            body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                margin: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/margin*/
+                border-width: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-width*/
+                padding: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/padding*/
+                font-family: sans-serif; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-family*/
+                text-align: center; /*https://developer.mozilla.org/en-US/docs/Web/CSS/text-align*/
+            }
+            body, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                display: flex; /*https://developer.mozilla.org/en-US/docs/Web/CSS/display*/
+                flex-wrap: nowrap; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap*/
+                align-items: center; /*https://developer.mozilla.org/es/docs/Web/CSS/align-items*/
+            }
+            body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                height: 100svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                width: 100vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                overflow: hidden; /*https://developer.mozilla.org/en-US/docs/Web/CSS/overflow*/
+                justify-content: space-between; /*https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content*/
+            }
+            .botones {
+                flex-direction: column; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction*/
+                justify-content: space-evenly;
+            }
+            .barra, .boton {
+                background-color: #004aad; /*https://developer.mozilla.org/en-US/docs/Web/CSS/background-color*/
+            }
+            .boton {
+                color: #ffffff; /*https://developer.mozilla.org/en-US/docs/Web/CSS/color*/
+                padding: 1em;
+                border-radius: 2em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius*/
+            }
+            .contenido#camara {
+                overflow: hidden;
+            }
+            #vista-camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                height: 100%;
+                width: 100%;
+            }
+            .contenido#tabla {
+                overflow-y: scroll;
+            }
+            #resultados {
+                border-collapse: separate; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-collapse*/
+                border-spacing: 2em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-spacing*/
+            }
+            @media screen and (orientation: portrait) { /*https://developer.mozilla.org/en-US/docs/Web/CSS/@media/orientation*/
+                body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                    font-size: 2vh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-size*/
+                }
+                body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                    flex-direction: column; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction*/
+                }
+                .barra, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                    width: 100vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .barra {
+                    height: 15svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .contenido#camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                    height: 60svh;
+                    width: 95vw;
+                }
+                .botones#credencial, .botones#codigo-qr {
+                    height: 20svh;
+                }
+                .contenido#tabla {
+                    height: 50svh;
+                    width: 95vw;
+                }
+                .botones#opciones {
+                    height: 30svh;
+                }
+                .botones#inicio {
+                    height: 80svh;
+                }
+            }
+            @media screen and (orientation: landscape) { /*https://developer.mozilla.org/en-US/docs/Web/CSS/@media/orientation*/
+                body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                    font-size: 4vh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-size*/
+                }
+                body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                    flex-direction: row; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction*/
+                }
+                .barra, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                    height: 100svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .barra {
+                    width: 15vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .contenido#camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                    height: 95svh;
+                    width: 60vw;
+                }
+                .botones#credencial, .botones#codigo-qr {
+                    width: 20vw;
+                }
+                .contenido#tabla {
+                    height: 95svh;
+                    width: 50vw;
+                }
+                .botones#opciones {
+                    width: 30vw;
+                }
+                .botones#inicio {
+                    width: 80vw;
+                }
+            }
+        </style>
+        <script> //https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
+            "use strict"; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
+
+            function oculta_elemento(id) {
+                let elemento = document.getElementById(id); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let valorAnt = elemento.style.display;
+                elemento.style.display = "none"; //https://developer.mozilla.org/en-US/docs/Web/CSS/display#none
+                let valorAct = elemento.style.display;
+                console.log(`[${id}] "${valorAnt}" -> "${valorAct}"`);
+            }
+
+            function muestra_elemento(id) {
+                let elemento = document.getElementById(id); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let valorAnt = elemento.style.display;
+                elemento.style.display = ""; //https://developer.mozilla.org/en-US/docs/Web/CSS/display
+                let valorAct = elemento.style.display;
+                console.log(`[${id}] "${valorAnt}" -> "${valorAct}"`);
+            }
+
+            function muestra_interfaz_fotografia(interfaz) {
+                oculta_elemento("inicio");
+                muestra_elemento("camara");
+                muestra_elemento("credencial");
+            }
+
+            function main() {
+                oculta_elemento("camara");
+                oculta_elemento("credencial");
+                let botonIniciar = document.getElementById("iniciar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonIniciar.addEventListener("click", muestra_interfaz_fotografia, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+            }
+
+            window.addEventListener("load", main, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+        </script>
+    </head>
+    <body>
+        <div class="barra"></div> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div-->
+        <div class="botones" id="inicio">
+            <button type="button" class="boton" id="iniciar-verificacion">Iniciar Verificación</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+        </div>
+        <div class="contenido" id="camara">
+            <canvas id="vista-camara"></canvas> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas-->
+        </div>
+        <div class="botones" id="credencial">
+            <button type="button" class="boton" id="fotografiar-credencial">Fotografiar credencial</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+            <button type="button" class="boton" id="ver-resultados">Ver resultados</button>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es-mx">
+    <head>
+        <meta charset="utf-8"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#charset-->
+        <meta name="viewport" content="width=device-width, height=device-height, interactive-widget=overlays-content"/> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag-->
+        <title>Herramienta</title>
+        <style>
+            body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                margin: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/margin*/
+                border-width: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-width*/
+                padding: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/padding*/
+                font-family: sans-serif; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-family*/
+                text-align: center; /*https://developer.mozilla.org/en-US/docs/Web/CSS/text-align*/
+            }
+            body, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                display: flex; /*https://developer.mozilla.org/en-US/docs/Web/CSS/display#flex*/
+                flex-wrap: nowrap; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap#nowrap*/
+                align-items: center; /*https://developer.mozilla.org/en-US/docs/Web/CSS/align-items#center*/
+            }
+            body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                height: 100svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                width: 100vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                justify-content: space-between; /*https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content#space-between*/
+            }
+            .botones {
+                flex-direction: column; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction#column*/
+                justify-content: space-evenly; /*https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content#space-evenly*/
+            }
+            .barra, .boton {
+                background-color: #004aad; /*https://developer.mozilla.org/en-US/docs/Web/CSS/background-color*/
+            }
+            .boton {
+                color: #ffffff; /*https://developer.mozilla.org/en-US/docs/Web/CSS/color*/
+                padding: 1em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/padding*/
+                border-radius: 2em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius*/
+            }
+            .boton:active, .boton:hover { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes*/
+                background-color: #001f47; /*https://developer.mozilla.org/en-US/docs/Web/CSS/background-color*/
+            }
+            .contenido#camara {
+                position: relative; /*https://developer.mozilla.org/en-US/docs/Web/CSS/position#relative*/
+            }
+            #vista-camara, #foto-camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                height: 100%; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                width: 100%; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                object-fit: contain; /*https://developer.mozilla.org/es/docs/Web/CSS/object-fit#contain*/
+                position: absolute; /*https://developer.mozilla.org/en-US/docs/Web/CSS/position#absolute*/
+                left: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/left*/
+                top: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/top*/
+            }
+            #foto-camara {
+                z-index: 1; /*https://developer.mozilla.org/en-US/docs/Web/CSS/z-index*/
+            }
+            .contenido#tabla {
+                overflow: auto; /*https://developer.mozilla.org/en-US/docs/Web/CSS/overflow#auto*/
+            }
+            #resultados {
+                border-collapse: separate; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-collapse#separate*/
+                border-spacing: 2em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-spacing*/
+            }
+            @media screen and (orientation: portrait) { /*https://developer.mozilla.org/en-US/docs/Web/CSS/@media/orientation*/
+                body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                    font-size: 2vh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-size*/
+                }
+                body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                    flex-direction: column; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction#column*/
+                }
+                .barra, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                    width: 100vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .barra {
+                    height: 15svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .contenido#camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                    height: 60svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                    width: 95vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .botones#credencial, .botones#codigo-qr {
+                    height: 20svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .contenido#tabla {
+                    height: 50svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                    width: 95vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .botones#opciones {
+                    height: 30svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .botones#inicio {
+                    height: 80svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+            }
+            @media screen and (orientation: landscape) { /*https://developer.mozilla.org/en-US/docs/Web/CSS/@media/orientation*/
+                body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                    font-size: 4vh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-size*/
+                }
+                body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                    flex-direction: row; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction#row*/
+                }
+                .barra, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                    height: 100svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .barra {
+                    width: 15vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .contenido#camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                    height: 95svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                    width: 60vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .botones#credencial, .botones#codigo-qr {
+                    width: 20vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .contenido#tabla {
+                    height: 95svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                    width: 50vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .botones#opciones {
+                    width: 30vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .botones#inicio {
+                    width: 80vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+            }
+        </style>
+        <script> //https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
+            "use strict"; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
+
+            let fotoCredencial1 = null;
+            let resultados = [
+                ["No.", "Boleta", "Nombre", "Resultado"]
+            ];
+            
+            function oculta_elemento(id) {
+                let elemento = document.getElementById(id); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let valorAnt = elemento.style.display; //https://developer.mozilla.org/en-US/docs/Web/CSS/display
+                elemento.style.display = "none"; //https://developer.mozilla.org/en-US/docs/Web/CSS/display#none
+                let valorAct = elemento.style.display; //https://developer.mozilla.org/en-US/docs/Web/CSS/display
+                console.log(`cambio de interfaz [${id}] "${valorAnt}" -> "${valorAct}"`);
+            }         
+
+            function actualiza_cuadro_guia() {
+                let camara = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let alto = camara.videoHeight; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/videoHeight
+                let ancho = camara.videoWidth; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/videoWidth
+
+                let canvas = document.getElementById("foto-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let dibujador2d = canvas.getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+                canvas.height = alto; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/height
+                canvas.width = ancho; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/width
+                
+                dibujador2d.clearRect(0, 0, ancho, alto); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clearRect
+                dibujador2d.lineWidth = 2; //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth
+                dibujador2d.strokeStyle = "blue"; //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeStyle
+                const N_BORDE = 20;
+                const ANCHO_CUADRO = ancho - 2 * N_BORDE;
+                const ALTO_CUADRO = alto - 2 * N_BORDE;
+                dibujador2d.strokeRect(N_BORDE, N_BORDE, ANCHO_CUADRO, ALTO_CUADRO); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeRect
+            }
+
+            function toma_fotografia(camara, canvas, dibujador2d) {
+                let alto = camara.videoHeight; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/videoHeight
+                let ancho = camara.videoWidth; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLVideoElement/videoWidth
+
+                canvas.height = alto; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/height
+                canvas.width = ancho; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/width
+                dibujador2d.drawImage(camara, 0, 0); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+            }
+
+            function fotografia_credencial() {
+                let camara = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let canvas = document.getElementById("foto-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let dibujador2d = canvas.getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+                toma_fotografia(camara, canvas, dibujador2d);            
+
+                fotoCredencial1 = canvas.toDataURL("image/png"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
+                console.log(`Frente: ${fotoCredencial1}`);
+                actualiza_cuadro_guia();
+            }
+
+            function agrega_resultados_temporales(indice) {
+                let valores = document.getElementById("valores"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let fila = valores.insertRow(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableSectionElement#instance_methods
+                let celda = fila.insertCell(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableRowElement/insertCell
+                celda.append(indice); //https://developer.mozilla.org/en-US/docs/Web/API/Element/append
+                celda = fila.insertCell(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableRowElement/insertCell
+                celda.append("..."); //https://developer.mozilla.org/en-US/docs/Web/API/Element/append
+                celda = fila.insertCell(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableRowElement/insertCell
+                celda.append("..."); //https://developer.mozilla.org/en-US/docs/Web/API/Element/append
+                celda = fila.insertCell(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableRowElement/insertCell
+                celda.append("Procesando imagenes"); //https://developer.mozilla.org/en-US/docs/Web/API/Element/append
+                resultados.push(fila); //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Array/push
+            }
+
+            function agrega_resultados(valoresFila) {
+                let indice = valoresFila[0];
+                let fila = resultados[indice]; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableSectionElement#instance_methods
+                resultados[indice] = valoresFila;
+
+                for (let i = 1; i <= 4; i++) {
+                    fila.deleteCell(-1); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableRowElement#instance_methods
+                }
+                for (let j = 0; j < valoresFila.length; j++) {
+                    let celda = fila.insertCell(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLTableRowElement/insertCell
+                    
+                    celda.append(valoresFila[j]); //https://developer.mozilla.org/en-US/docs/Web/API/Element/append
+                }
+            }
+
+            async function recibe_resultados(respuesta) {
+                console.log(`Respuesta (${typeof(respuesta)}): ${respuesta}`);
+                let resultadosRespuesta = await respuesta.json(); //https://developer.mozilla.org/en-US/docs/Web/API/Response/json
+
+                console.log(`Resultados recibidos (${typeof(resultadosRespuesta)}): ${resultadosRespuesta}`);
+                agrega_resultados(resultadosRespuesta);
+            }
+
+            function muestra_error(indice) {
+                console.log(`Error en resultados [${indice}]`);
+                let resultadosError = [indice, "-", "-", "No se recibieron resultados"];
+                agrega_resultados(resultadosError);
+            }
+
+            async function escanea_qr() {
+                let camara = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let canvas = document.getElementById("foto-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let dibujador2d = canvas.getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+                toma_fotografia(camara, canvas, dibujador2d); 
+
+                let fotoCredencial2 = canvas.toDataURL("image/png"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
+                console.log(`Reverso: ${fotoCredencial2}`);
+                actualiza_cuadro_guia();
+                
+                let indice = resultados.length;
+                let datos = new FormData(); //https://developer.mozilla.org/en-US/docs/Web/API/FormData
+                datos.set("indice", indice); //https://developer.mozilla.org/en-US/docs/Web/API/FormData/set
+                datos.set("frente", fotoCredencial1); //https://developer.mozilla.org/en-US/docs/Web/API/FormData/set
+                datos.set("reverso", fotoCredencial2); //https://developer.mozilla.org/en-US/docs/Web/API/FormData/set
+                let contenido = {
+                    method: "post", 
+                    body: datos
+                };
+
+                agrega_resultados_temporales(indice);
+
+                try {
+                    let respuesta = await fetch("/herramienta", contenido); //https://developer.mozilla.org/en-US/docs/Web/API/fetch
+                    recibe_resultados(respuesta);
+                } catch (error) {
+                    console.log(`Error (${typeof(error)}): "${error}"`);
+                    muestra_error(indice);
+                }
+
+                fotoCredencial1 = null; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Delete_in_strict_mode#freeing_the_contents_of_a_variable
+                fotoCredencial2 = null; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Delete_in_strict_mode#freeing_the_contents_of_a_variable
+                datos = null;
+                console.log(`Eliminacion frente: ${fotoCredencial1}`);
+                console.log(`Eliminacion reverso: ${fotoCredencial2}`);
+                console.log(`Eliminacion datos: ${datos}`);
+            }
+
+            function deshabilita_camara() {
+                let camara = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let video = camara.srcObject; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
+                console.log(`Objeto video (${typeof(video)}): ${video}`);
+                video = video.getTracks(); //https://developer.mozilla.org/en-US/docs/Web/API/MediaStream/getTracks
+                console.log(`Arreglo video (${typeof(video)}) (${video.length}): ${video}`);
+                video = video[0];
+                console.log(`Video (${typeof(video)}): ${video}`);
+                video.enabled = false; //https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/enabled
+                console.log(`Video habilitado (${typeof(video.enabled)}): ${video.enabled}`); 
+                console.log(`Video estado (${typeof(video.readyState)}): ${video.readyState}`); //https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/readyState
+            }
+
+            function habilita_camara() {
+                let camara = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let video = camara.srcObject; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
+                console.log(`Objeto video (${typeof(video)}): ${video}`);
+                video = video.getTracks(); //https://developer.mozilla.org/en-US/docs/Web/API/MediaStream/getTracks
+                console.log(`Arreglo video (${typeof(video)}) (${video.length}): ${video}`);
+                video = video[0];
+                console.log(`Video (${typeof(video)}): ${video}`);
+                video.enabled = true; //https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/enabled
+                console.log(`Video habilitado (${typeof(video.enabled)}): ${video.enabled}`); 
+                console.log(`Video estado (${typeof(video.readyState)}): ${video.readyState}`); //https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/readyState
+            }
+
+            function finaliza_herramienta() {
+                let camara = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let video = camara.srcObject; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
+                console.log(`Objeto video (${typeof(video)}): ${video}`);
+                video = video.getTracks(); //https://developer.mozilla.org/en-US/docs/Web/API/MediaStream/getTracks
+                console.log(`Arreglo video (${typeof(video)}) (${video.length}): ${video}`);
+                video = video[0];
+                console.log(`Video (${typeof(video)}): ${video}`);
+                video.stop(); //https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/stop
+                console.log(`Video estado (${typeof(video.readyState)}): ${video.readyState}`); //https://developer.mozilla.org/en-US/docs/Web/API/MediaStreamTrack/readyState
+                
+                screen.orientation.removeEventListener("change", actualiza_cuadro_guia, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
+
+                let botonFotografiar = document.getElementById("fotografiar-credencial"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFotografiar.removeEventListener("click", fotografia_credencial, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
+
+                let botonEscanear = document.getElementById("escanear-qr"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonEscanear.removeEventListener("click", escanea_qr, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
+
+                let botonVer = document.getElementById("ver-resultados"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonVer.removeEventListener("click", deshabilita_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
+
+                let botonContinuar = document.getElementById("continuar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonContinuar.removeEventListener("click", habilita_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
+
+                let botonFinalizar = document.getElementById("finalizar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFinalizar.removeEventListener("click", finaliza_herramienta, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
+            }
+
+            async function inicializa_herramienta(video) {
+                console.log("CON CAMARA");
+                console.log(`Video (${typeof(video)}): ${video}`);
+                let camara = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                camara.srcObject = video; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/srcObject
+                await camara.play(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLMediaElement/play
+                
+                actualiza_cuadro_guia();
+                screen.orientation.addEventListener("change", actualiza_cuadro_guia, false); //https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/change_event
+
+                let botonFotografiar = document.getElementById("fotografiar-credencial"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFotografiar.addEventListener("click", fotografia_credencial, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+
+                let botonEscanear = document.getElementById("escanear-qr"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonEscanear.addEventListener("click", escanea_qr, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+
+                let botonVer = document.getElementById("ver-resultados"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonVer.addEventListener("click", deshabilita_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+
+                let botonContinuar = document.getElementById("continuar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonContinuar.addEventListener("click", habilita_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+
+                let botonFinalizar = document.getElementById("finalizar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFinalizar.addEventListener("click", finaliza_herramienta, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+            }
+
+            function actualiza_cuadro_guia_sin_camara() {
+                let canvas = document.getElementById("foto-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let dibujador2d = canvas.getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+                let alto = 500;
+                let ancho = 500;
+                canvas.height = alto; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/height
+                canvas.width = ancho; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/width
+                
+                dibujador2d.clearRect(0, 0, ancho, alto); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/clearRect
+                dibujador2d.lineWidth = 2; //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth
+                dibujador2d.strokeStyle = "blue"; //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeStyle
+                const N_BORDE = 20;
+                const ANCHO_CUADRO = ancho - 2 * N_BORDE;
+                const ALTO_CUADRO = alto - 2 * N_BORDE;
+                dibujador2d.strokeRect(N_BORDE, N_BORDE, ANCHO_CUADRO, ALTO_CUADRO); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeRect
+            }
+
+            function dibuja_cuadro_aleatorio(dibujador2d) {
+                let aleatorio1 = Math.random() * 100 + 10; //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+                let aleatorio2 = Math.random() * 100 + 10;
+                dibujador2d.strokeRect(10, 10, aleatorio1, aleatorio2); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeRect
+            }
+
+            function fotografia_credencial_sin_camara() {
+                let canvas = document.getElementById("foto-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let dibujador2d = canvas.getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext 
+                dibuja_cuadro_aleatorio(dibujador2d);                
+
+                fotoCredencial1 = canvas.toDataURL("image/png"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
+                console.log(`Frente: ${fotoCredencial1}`);
+                actualiza_cuadro_guia_sin_camara();
+            }
+
+            async function escanea_qr_sin_camara() {
+                let canvas = document.getElementById("foto-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let dibujador2d = canvas.getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+                dibuja_cuadro_aleatorio(dibujador2d);  
+
+                let fotoCredencial2 = canvas.toDataURL("image/png"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
+                console.log(`Reverso: ${fotoCredencial2}`);
+                actualiza_cuadro_guia_sin_camara();
+                
+                let indice = resultados.length;
+                let datos = new FormData(); //https://developer.mozilla.org/en-US/docs/Web/API/FormData
+                datos.set("indice", indice); //https://developer.mozilla.org/en-US/docs/Web/API/FormData/set
+                datos.set("frente", fotoCredencial1); //https://developer.mozilla.org/en-US/docs/Web/API/FormData/set
+                datos.set("reverso", fotoCredencial2); //https://developer.mozilla.org/en-US/docs/Web/API/FormData/set
+                let contenido = {
+                    method: "post", 
+                    body: datos
+                };
+
+                agrega_resultados_temporales(indice);
+
+                try {
+                    let respuesta = await fetch("/herramienta", contenido); //https://developer.mozilla.org/en-US/docs/Web/API/fetch
+                    recibe_resultados(respuesta);
+                } catch (error) {
+                    console.log(`Error (${typeof(error)}): "${error}"`);
+                    muestra_error(indice);
+                }
+
+                fotoCredencial1 = null; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Delete_in_strict_mode#freeing_the_contents_of_a_variable
+                fotoCredencial2 = null; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Delete_in_strict_mode#freeing_the_contents_of_a_variable
+                datos = null;
+                console.log(`Eliminacion frente: ${fotoCredencial1}`);
+                console.log(`Eliminacion reverso: ${fotoCredencial2}`);
+                console.log(`Eliminacion datos: ${datos}`);
+            }
+
+            function finaliza_herramienta_sin_camara() {
+                screen.orientation.removeEventListener("change", actualiza_cuadro_guia_sin_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
+
+                let botonFotografiar = document.getElementById("fotografiar-credencial"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFotografiar.removeEventListener("click", fotografia_credencial_sin_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
+
+                let botonEscanear = document.getElementById("escanear-qr"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonEscanear.removeEventListener("click", escanea_qr_sin_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
+
+                let botonFinalizar = document.getElementById("finalizar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFinalizar.removeEventListener("click", finaliza_herramienta_sin_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/removeEventListener
+            }
+
+            function inicializa_herramienta_sin_camara() {
+                console.log("SIN CAMARA");
+
+                actualiza_cuadro_guia_sin_camara();
+                screen.orientation.addEventListener("change", actualiza_cuadro_guia_sin_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/ScreenOrientation/change_event
+
+                let botonFotografiar = document.getElementById("fotografiar-credencial"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFotografiar.addEventListener("click", fotografia_credencial_sin_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+
+                let botonEscanear = document.getElementById("escanear-qr"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonEscanear.addEventListener("click", escanea_qr_sin_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+
+                let botonFinalizar = document.getElementById("finalizar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFinalizar.addEventListener("click", finaliza_herramienta_sin_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+            }
+
+            async function inicializa_camara() {
+                let opcionesCamara = {
+                    video: { 
+                        facingMode: "environment", //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/facingMode#environment
+                        height: 480, //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/height
+                        width: 640 //https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/width
+                    }
+                }
+                try {
+                    let video = await navigator.mediaDevices.getUserMedia(opcionesCamara); //https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia
+                    inicializa_herramienta(video);
+                } catch (error) {
+                    console.log(`Error (${typeof(error)}): "${error}"`);
+                    inicializa_herramienta_sin_camara();
+                }
+            }
+
+            function muestra_elemento(id) {
+                let elemento = document.getElementById(id); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let valorAnt = elemento.style.display; //https://developer.mozilla.org/en-US/docs/Web/CSS/display
+                elemento.style.display = ""; //https://developer.mozilla.org/en-US/docs/Web/CSS/display
+                let valorAct = elemento.style.display; //https://developer.mozilla.org/en-US/docs/Web/CSS/display
+                console.log(`cambio de interfaz [${id}] "${valorAnt}" -> "${valorAct}"`);
+            }
+
+            function muestra_interfaz_fotografia_1() {
+                oculta_elemento("inicio");
+                muestra_elemento("camara");
+                muestra_elemento("credencial");
+            }
+
+            function muestra_interfaz_escaner() {
+                oculta_elemento("credencial");
+                muestra_elemento("codigo-qr");
+            }
+
+            function muestra_interfaz_fotografia_2() {
+                oculta_elemento("codigo-qr");
+                muestra_elemento("credencial");
+            }
+
+            function muestra_interfaz_resultados() {
+                oculta_elemento("camara");
+                oculta_elemento("credencial");
+                muestra_elemento("tabla");
+                muestra_elemento("opciones");
+            }
+
+            function muestra_interfaz_fotografia_3() {
+                oculta_elemento("tabla");
+                oculta_elemento("opciones");
+                muestra_elemento("camara");
+                muestra_elemento("credencial");
+            }
+
+            function guarda_resultados() {
+                console.log(`Resultados para csv: "${resultados}"`);
+
+                let nResultados = resultados.length; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length
+                let csv = new Array(nResultados); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/Array
+                for (let i = 0; i < nResultados; i++) {
+                    let fila = resultados[i];
+                    if (typeof(fila) == typeof([])) {
+                        fila = fila.join(); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
+                    }
+                    else {
+                        fila = `${i},...,...,Procesando imagenes`;
+                    }
+                    csv[i] = fila;
+                }
+                csv = csv.join("\n"); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
+
+                console.log(`Csv: "${csv}"`);
+
+                let tipoArchivo = { 
+                    type: "text/csv" 
+                };
+                let archivo = new Blob([csv], tipoArchivo); //https://developer.mozilla.org/en-US/docs/Web/API/Blob/Blob
+                let enlaceArchivo = URL.createObjectURL(archivo); //https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL_static
+
+                let fecha = new Date(); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+                fecha = [
+                    fecha.getFullYear(), //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getFullYear
+                    fecha.getMonth() + 1, //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getMonth
+                    fecha.getDate(), //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getDate
+                    fecha.getHours(), //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getHours
+                    fecha.getMinutes(), //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getMinutes
+                    fecha.getSeconds() //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Date/getSeconds
+                ]
+                fecha = fecha.join("-"); //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join
+                let nombreArchivo = `resultados-${fecha}.csv`; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+
+                let enlaceDescarga = document.createElement("a"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/createElement
+                enlaceDescarga.href = enlaceArchivo; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLAnchorElement/href
+                enlaceDescarga.target = "_blank"; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLAnchorElement/target
+                enlaceDescarga.download = nombreArchivo; //https://developer.mozilla.org/en-US/docs/Web/API/HTMLAnchorElement/download
+                enlaceDescarga.click(); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click
+
+                URL.revokeObjectURL(archivo); //https://developer.mozilla.org/en-US/docs/Web/API/URL/revokeObjectURL_static
+            }
+
+            function elimina_resultados() {
+                resultados = [
+                    ["No.", "Boleta", "Nombre", "Resultado"]
+                ];
+                let valores = document.getElementById("valores"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                valores.replaceChildren(); //https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceChildren
+            }
+
+            function muestra_interfaz_inicio() {
+                oculta_elemento("tabla");
+                oculta_elemento("opciones");
+                muestra_elemento("inicio");
+            }
+
+            function main() {
+                oculta_elemento("camara");
+                oculta_elemento("credencial");
+                oculta_elemento("codigo-qr");
+                oculta_elemento("tabla");
+                oculta_elemento("opciones");
+
+                let botonIniciar = document.getElementById("iniciar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonIniciar.addEventListener("click", inicializa_camara, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                botonIniciar.addEventListener("click", muestra_interfaz_fotografia_1, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                let botonFotografiar = document.getElementById("fotografiar-credencial"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFotografiar.addEventListener("click", muestra_interfaz_escaner, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                let botonEscanear = document.getElementById("escanear-qr"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonEscanear.addEventListener("click", muestra_interfaz_fotografia_2, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                let botonVer = document.getElementById("ver-resultados"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonVer.addEventListener("click", muestra_interfaz_resultados, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                let botonContinuar = document.getElementById("continuar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonContinuar.addEventListener("click", muestra_interfaz_fotografia_3, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+
+                let botonGuardar = document.getElementById("guardar-resultados"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonGuardar.addEventListener("click", guarda_resultados, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                let botonFinalizar = document.getElementById("finalizar-verificacion"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFinalizar.addEventListener("click", elimina_resultados, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                botonFinalizar.addEventListener("click", muestra_interfaz_inicio, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+            }
+
+            window.addEventListener("load", main, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+        </script>
+    </head>
+    <body>
+        <div class="barra"></div> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div-->
+        <div class="botones" id="inicio"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div-->
+            <button type="button" class="boton" id="iniciar-verificacion">Iniciar Verificación</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+        </div>
+        <div class="contenido" id="camara"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div-->
+            <video id="vista-camara"></video> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video-->
+            <canvas id="foto-camara"></canvas> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas-->
+        </div>
+        <div class="botones" id="credencial"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div-->
+            <button type="button" class="boton" id="fotografiar-credencial">Fotografiar credencial</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+            <button type="button" class="boton" id="ver-resultados">Ver resultados</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+        </div>
+        <div class="botones" id="codigo-qr"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div-->
+            <button type="button" class="boton" id="escanear-qr">Escanear código QR</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+        </div>
+        <div class="contenido" id="tabla"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div-->
+            <table id="resultados"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table-->
+                <thead> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/thead-->
+                    <tr> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tr-->
+                        <th>No.</th> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th-->
+                        <th>Boleta</th> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th-->
+                        <th>Nombre</th> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th-->
+                        <th>Resultado</th> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/th-->
+                    </tr>   
+                </thead>
+                <tbody id="valores"></tbody> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/tbody-->
+            </table>
+        </div>
+        <div class="botones" id="opciones"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div-->
+            <button type="button" class="boton" id="continuar-verificacion">Continuar verificación</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+            <button type="button" class="boton" id="guardar-resultados">Guardar resultados</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+            <button type="button" class="boton" id="finalizar-verificacion">Finalizar verificación</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+        </div>
+    </body>
+</html>

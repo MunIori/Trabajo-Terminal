@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es-mx">
+    <head>
+        <meta charset="utf-8"> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta#charset-->
+        <meta name="viewport" content="width=device-width, height=device-height, interactive-widget=overlays-content"/> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Viewport_meta_tag-->
+        <title>Herramienta</title>
+        <style> /*https://developer.mozilla.org/en-US/docs/Web/HTML/Element/style*/
+            body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                margin: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/margin*/
+                border-width: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-width*/
+                padding: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/padding*/
+                font-family: sans-serif; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-family*/
+                text-align: center; /*https://developer.mozilla.org/en-US/docs/Web/CSS/text-align*/
+            }
+            body, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                display: flex; /*https://developer.mozilla.org/en-US/docs/Web/CSS/display*/
+                flex-wrap: nowrap; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap*/
+                align-items: center; /*https://developer.mozilla.org/es/docs/Web/CSS/align-items*/
+            }
+            body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                height: 100svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                width: 100vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                overflow: hidden; /*https://developer.mozilla.org/en-US/docs/Web/CSS/overflow*/
+                justify-content: space-between; /*https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content*/
+            }
+            .botones {
+                flex-direction: column; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction*/
+                justify-content: space-evenly;
+            }
+            .barra, .boton {
+                background-color: #004aad; /*https://developer.mozilla.org/en-US/docs/Web/CSS/background-color*/
+            }
+            .boton {
+                color: #ffffff; /*https://developer.mozilla.org/en-US/docs/Web/CSS/color*/
+                padding: 1em;
+                border-radius: 2em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius*/
+            }
+            .contenido#camara {
+                overflow: hidden;
+                position: relative; /*https://developer.mozilla.org/en-US/docs/Web/CSS/position#relative*/
+            }
+            #vista-camara, #foto-camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                height: 100%;
+                width: 100%;
+                object-fit: contain; /*https://developer.mozilla.org/es/docs/Web/CSS/object-fit#contain*/
+            }
+            #foto-camara {
+                position: absolute; /*https://developer.mozilla.org/en-US/docs/Web/CSS/position#absolute*/
+                left: 0; /*https://developer.mozilla.org/en-US/docs/Web/CSS/left*/
+                z-index: 1; /*https://developer.mozilla.org/en-US/docs/Web/CSS/z-index*/
+            }
+            .contenido#tabla {
+                overflow-y: scroll;
+            }
+            #resultados {
+                border-collapse: separate; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-collapse*/
+                border-spacing: 2em; /*https://developer.mozilla.org/en-US/docs/Web/CSS/border-spacing*/
+            }
+            @media screen and (orientation: portrait) { /*https://developer.mozilla.org/en-US/docs/Web/CSS/@media/orientation*/
+                body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                    font-size: 2vh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-size*/
+                }
+                body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                    flex-direction: column; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction*/
+                }
+                .barra, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                    width: 100vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .barra {
+                    height: 15svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .contenido#camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                    height: 60svh;
+                    width: 95vw;
+                }
+                .botones#credencial, .botones#codigo-qr {
+                    height: 20svh;
+                }
+                .contenido#tabla {
+                    height: 50svh;
+                    width: 95vw;
+                }
+                .botones#opciones {
+                    height: 30svh;
+                }
+            }
+            @media screen and (orientation: landscape) { /*https://developer.mozilla.org/en-US/docs/Web/CSS/@media/orientation*/
+                body, body * { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors*/
+                    font-size: 4vh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/font-size*/
+                }
+                body { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors*/
+                    flex-direction: row; /*https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction*/
+                }
+                .barra, .botones { /*https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors*/
+                    height: 100svh; /*https://developer.mozilla.org/en-US/docs/Web/CSS/height*/
+                }
+                .barra {
+                    width: 15vw; /*https://developer.mozilla.org/en-US/docs/Web/CSS/width*/
+                }
+                .contenido#camara { /*https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors*/
+                    height: 95svh;
+                    width: 60vw;
+                }
+                .botones#credencial, .botones#codigo-qr {
+                    width: 20vw;
+                }
+                .contenido#tabla {
+                    height: 95svh;
+                    width: 50vw;
+                }
+                .botones#opciones {
+                    width: 30vw;
+                }
+            }
+        </style>
+        <script> //https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script
+            "use strict"; //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
+
+            function muestraResultados(resultados) {
+                console.log(typeof(resultados)); //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/typeof
+                console.log(resultados); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+            }
+
+            function recibeResultados(respuesta) {
+                console.log(typeof(respuesta)); //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Operators/typeof
+                console.log(respuesta); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                respuesta.json().then(muestraResultados); //https://developer.mozilla.org/en-US/docs/Web/API/Response/json
+            }
+            
+            function enviaImagenes() {
+                let canvas = document.getElementById("vista-camara"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                let ctx = canvas.getContext("2d"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+
+                let aleatorio1 = Math.random() * 100 + 10; //https://developer.mozilla.org/es/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+                let aleatorio2 = Math.random() * 100 + 10;
+                ctx.strokeRect(10, 10, aleatorio1, aleatorio2); //https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeRect
+
+                let img = canvas.toDataURL("image/png"); //https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toDataURL
+                console.log(img); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+                
+                let datos = new FormData(); //https://developer.mozilla.org/en-US/docs/Web/API/FormData
+                datos.set("credencial", img); //https://developer.mozilla.org/en-US/docs/Web/API/FormData/set
+
+                let contenido = {
+                    method: "post", 
+                    body: datos
+                };
+                fetch("/fotografia", contenido).then(recibeResultados); //https://developer.mozilla.org/en-US/docs/Web/API/fetch
+            }
+
+            function main() {
+                let botonFotografiar = document.getElementById("fotografiar-credencial"); //https://developer.mozilla.org/en-US/docs/Web/API/Document/getElementById
+                botonFotografiar.addEventListener("click", enviaImagenes, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+            }
+
+            window.addEventListener("load", main, false); //https://developer.mozilla.org/en-US/docs/Web/API/EventTarget/addEventListener
+        </script>
+    </head>
+    <body>
+        <div class="barra"></div> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/div-->
+        <div class="contenido" id="camara">
+            <canvas id="vista-camara"></canvas> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas-->
+        </div>
+        <div class="botones" id="credencial">
+            <button type="button" class="boton" id="fotografiar-credencial">Fotografiar credencial</button> <!--https://developer.mozilla.org/en-US/docs/Web/HTML/Element/button-->
+            <button type="button" class="boton" id="ver-resultados">Ver resultados</button>
+        </div>
+    </body>
+</html>
